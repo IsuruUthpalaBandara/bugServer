@@ -99,14 +99,14 @@ app.post("/api/createproject",(req,res)=>{
 
 app.post("/api/loadproject",(req,res)=>{
     const loadProject=req.body.projectName
-    const projectPassword=req.body.projectPassword
+    
 
    console.log(loadProject)
-   console.log(projectPassword)
+  
 
 
-    sqlLoadProject="(SELECT * FROM projects WHERE projectName=? AND projectPassword=?)"
-    database.query(sqlLoadProject,[loadProject,projectPassword],(err,result)=>{
+    sqlLoadProject="SELECT * FROM projects WHERE projectName=?"
+    database.query(sqlLoadProject,[loadProject],(err,result)=>{
 
         if(result==0){
             res.status(403).send(err)
@@ -115,7 +115,7 @@ app.post("/api/loadproject",(req,res)=>{
         }
         else{
 
-            console.log("Loaded Project JSON=>",result)
+            console.log("Loaded Project JSON=>",JSON.stringify(result))
             res.send(result)
 
         }
@@ -139,6 +139,16 @@ app.post("/api/updateproject",(req,res)=>{
         res.send(result)
     })
     
+})
+
+
+app.get('/api/projectlist',(req,res)=>{
+    const sqlProjectList = "SELECT projectName, projectCreator FROM projects"
+    database.query(sqlProjectList,(err,result)=>{
+        if(err)throw(console.log("Error Project List=>",err))
+        res.send(result)
+        console.log("Project List=>",result)
+    })
 })
 
 
